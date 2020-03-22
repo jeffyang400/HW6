@@ -91,9 +91,16 @@ public class Solver
 		
 		// Print out your solution, or test if it equals() the solution in TestGridSupplier.
 		ArrayList<Grid> s = solver.getSolutions();
-		System.out.println(s.size());
 		if (s.size() > 0) {
-			System.out.println(s.get(0).toString());
+			if (s.get(0).equals(TestGridSupplier.getSolution1())) {
+				System.out.println("equal");
+			}
+			else {
+				System.out.println(s.get(0).toString());
+			}
+		}
+		else {
+			System.out.println("No Solution");
 		}
 		
 	}

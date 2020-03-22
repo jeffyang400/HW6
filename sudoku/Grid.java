@@ -66,6 +66,21 @@ public class Grid
 				values[j][i] = src.values[j][i];
 	}
 	
+	private int[] findNextEmptyCell() {
+		int[] XY = null;
+		for (int j = 0; j < 9; j++) {
+			for (int i = 0; i < 9; i++) {
+				if (values[j][i] == 0) {
+					XY = new int[2];
+					XY[0] = j;
+					XY[1] = i;
+					return XY;
+				}
+			}
+		}
+		return null;
+		
+	}
 	
 	//
 	// COMPLETE THIS
@@ -100,26 +115,18 @@ public class Grid
 	//
 	public ArrayList<Grid> next9Grids()
 	{		
-		int xOfNextEmptyCell = 0;
-		int yOfNextEmptyCell = 0;
+		int xOfNextEmptyCell;
+		int yOfNextEmptyCell;
 		
-		int j = 0;
-		int i = 0;
-		// Find x,y of an empty cell.
-		for (j = 0; j < 9; j++) {
-			for (i = 0; i < 9; i++) {
-				if (values[j][i] == 0) {
-					xOfNextEmptyCell = i;
-					yOfNextEmptyCell = j;
-					break;
-				}
-			}
-		}
-		if (i >= 9 && j >= 9) {
+		int[] XY = findNextEmptyCell();
+		if (XY == null) {
 			return null;
 		}
+		yOfNextEmptyCell = XY[0];
+		xOfNextEmptyCell = XY[1];
+		
 		// Construct array list to contain 9 new grids.
-		ArrayList<Grid> grids = new ArrayList<Grid>(9);
+		ArrayList<Grid> grids = new ArrayList<Grid>();
 
 		// Create 9 new grids as described in the comments above. Add them to grids.
 		for (int n = 1; n < 10; n++) {
@@ -151,39 +158,32 @@ public class Grid
 	
 	public boolean isLegal()
 	{
-		System.out.println("start legal checking");
 		HashSet<Integer> numbers = new HashSet<Integer>();
+		
 		// Check every row. If you find an illegal row, return false.
 		for (int j = 0; j < 9; j++) {
 			for (int i = 0; i < 9; i++) {
 				if(values[j][i] != 0 && numbers.add(values[j][i]) == false) {
-					System.out.println(this.toString());
-					System.out.println("row: " + j + " , " + i + ", " + values[j][i]);
 					return false;
 				}
 			}
 			numbers.clear();
 		}
-		System.out.println("row checking done");
+		
 		// Check every column. If you find an illegal column, return false.
 		for (int j = 0; j < 9; j++) {
 			for (int i = 0; i < 9; i++) {
 				if (values[i][j] != 0 && numbers.add(values[i][j]) == false) {
-					System.out.println(this.toString());
-					System.out.println( "column: " + i + " , " + j + ", " + values[i][j]);
 					return false;
 				}
 			}
 			numbers.clear();
 		}
-		System.out.println("column checking done");
 		
 		// Check every block. If you find an illegal block, return false.
 		for (int j = 0; j < 9; j+=3) {
 			for (int i = 0; i < 9; i+=3) {
 				if(checkBlock(j, i, numbers) == false) {
-					System.out.println(this.toString());
-					System.out.println("block: " + j + " , " + i + ", " + values[j][i]);
 					return false;
 				}
 				numbers.clear();
@@ -224,7 +224,7 @@ public class Grid
 		Grid xGrid = (Grid) x;
 		for (int j = 0; j < 9; j++) {
 			for (int i = 0; i < 9; i++) {
-				if (xGrid.values[i][j] != this.values[j][i]) {
+				if (xGrid.values[j][i] != this.values[j][i]) {
 					return false;
 				}
 			}
